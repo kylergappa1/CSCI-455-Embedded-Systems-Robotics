@@ -31,7 +31,7 @@ FAST_TURN_BUFFER_CUSION = 5
 SLOW_TURN_BUFFER_CUSION = 0.5
 FAST_TURNING_VELOCITY = 2.0
 SLOW_TURNING_VELOCITY = 0.1
-PS_SENSITIVITY = 300
+PS_SENSITIVITY = 1000
 
 
 def adjustBearing(bearing):
@@ -63,7 +63,7 @@ class MyRobot:
     
     traveling_direction = None
     found_wall = False
-    following_wall = False
+    # found_wall = True
 
     def __init__(self, robot, timestep):
         self.robot = robot
@@ -213,7 +213,7 @@ class MyRobot:
         if turnSlow:
             while self.step() != -1:
                 bearing = self.bearing
-                print(bearing)
+                # print(bearing)
                 self._setTurnVelocity(turningDirection, SLOW_TURNING_VELOCITY)
                 if turningDirection == Direction.Left and bearing > 360 - SLOW_TURN_BUFFER_CUSION:
                     break
@@ -342,18 +342,34 @@ class MyRobot:
 
 class EPuck(MyRobot):
 
+    running = True
+    wall_ending = False
+
     def run(self):
-        while self.step() > 0:
+        self.setSpeed(50)
+        while self.step() > 0 and self.running:
             self.travel()
     
     def travel(self):
-        if self.found_wall is False:
+
+        print(self.bearing)
+        self.showRightSensors()
+
+        if self.ps0 > PS_SENSITIVITY and self.ps7 > PS_SENSITIVITY:
+            self.found_wall = True
+            self.stop()
+            self.mountWall()
             self.setSpeed(50)
-            if self.ps0 > PS_SENSITIVITY or self.ps7 > PS_SENSITIVITY:
-                self.found_wall = True
-                self.stop()
-                self.mountWall()
-                print(self)
+            print(self)
+
+        if self.found_wall:
+            # self.showRightSensors()
+            if self.ps2 < 500 and self.ps1 < 200:
+                # self.setLeftWheelSpeed(40)
+                self.setRightWheelSpeed(1)
+                return
+
+            self.setSpeed(50)
 
     def mountWall(self):
         dir = self.direction
@@ -365,6 +381,9 @@ class EPuck(MyRobot):
             self.faceNorth()
         elif dir == Direction.West:
             self.faceSouth()
+
+    def showRightSensors(self):
+        print("ps0: {:.4f} - ps1: {:.4f} - ps2: {:.4f} - ps3: {:.4f}".format(self.ps0, self.ps1, self.ps2, self.ps3))
 
     def __str__(self):
         str = "{!s:-^40}\n"
