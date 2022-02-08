@@ -1,3 +1,3 @@
 {
-    "python.autoComplete.extraPaths": ["/usr/local/webots/lib/controller/python38"],
+    "python.autoComplete.extraPaths": ["/Applications/Webots.app/lib/controller/python38"],
 }
