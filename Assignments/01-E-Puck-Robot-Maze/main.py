@@ -88,6 +88,29 @@ class EPuck:
         else:
             return Direction.North
 
+    # setSpeed()
+    # -------------------------------------------
+    # Set the robots wheel speed based on a
+    # percentage of the MAX_SPEED.
+    #
+    # Example: self.setSpeed(50)
+    # sets wheel velocity to 50% of the MAX_SPEED
+    # -------------------------------------------
+    def setSpeed(self, speed):
+        speed = MAX_SPEED * (speed / 100)
+        self.leftMotor.setVelocity(speed)
+        self.rightMotor.setVelocity(speed)
+
+    # setLeftWheelSpeed()
+    def setLeftWheelSpeed(self, speed):
+        speed = MAX_SPEED * (speed / 100)
+        self.leftMotor.setVelocity(speed)
+
+    # setRightWheelSpeed()
+    def setRightWheelSpeed(self, speed):
+        speed = MAX_SPEED * (speed / 100)
+        self.rightMotor.setVelocity(speed)
+
     def __str__(self):
         str = "{!s:-^40}\n"
         str += "{!s:<20}{!s} - ({:.2f})\n"
