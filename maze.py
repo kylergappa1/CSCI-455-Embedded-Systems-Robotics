@@ -25,12 +25,16 @@ class Direction(Enum):
     Left = 'Left'
     Right = 'Right'
 
+class RobotStates(Enum):
+    FindWall = 'Find Wall'
+    FollowWall = 'Follow Wall'
+
 
 MAX_SPEED = 6.28
 psNames = ['ps0', 'ps1', 'ps2', 'ps3', 'ps4', 'ps5', 'ps6', 'ps7']
-FAST_TURN_BUFFER_CUSION = 5
+FAST_TURN_BUFFER_CUSION = 15
 SLOW_TURN_BUFFER_CUSION = 0.5
-FAST_TURNING_VELOCITY = 2.0
+FAST_TURNING_VELOCITY = 2
 SLOW_TURNING_VELOCITY = 0.1
 PS_SENSITIVITY = 1000
 
@@ -65,16 +69,20 @@ class EPuck:
     compass = None
     
     running = True
-    wall_ending = False
-    traveling_direction = None
-    found_wall = False
+    state = None #
+
+    last_direction = None
+
+    # traveling_direction = None
     # found_wall = True
+
 
     def __init__(self):
         robot = Robot()
         self.robot = robot
 
         timestep = int(robot.getBasicTimeStep())
+        timestep = 64
         self.timestep = timestep
 
         for i in psNames:
@@ -115,10 +123,8 @@ class EPuck:
             self.ps.append(robot.getDevice(psNames[i]))
             self.ps[i].enable(timestep)
 
-        self.current_instructions = 'find wall'
+        self.state = RobotStates.FindWall
 
-        if self.step():
-            self.traveling_direction = self.direction
 
     def step(self):
         if self.robot.step(self.timestep) != -1:
@@ -225,7 +231,7 @@ class EPuck:
         turnSlow = False
         if turningDirection == Direction.Left and bearing < 360 - SLOW_TURN_BUFFER_CUSION:
             turnSlow = True
-        elif turningDirection == Direction.Right and bearing > 0 + SLOW_TURN_BUFFER_CUSION:
+        elif turningDirection == Direction.Right and bearing > 0 + SLOW_TURN_BUFFER_CUSION and bearing < 90:
             turnSlow = True
         if turnSlow:
             while self.step() != -1:
@@ -355,31 +361,83 @@ class EPuck:
 
     def run(self):
         # self.setSpeed(50)
-        while self.step() > 0 and self.running:
+        while self.step() and self.running:
             self.travel()
     
     def travel(self):
-        print(self.bearing)
+
+        if self.last_direction is None:
+            self.last_direction = self.direction
+        
+        
+        # print(self.bearing)
         # self.showRightSensors()
 
-
-        return
-
         if self.ps0 > PS_SENSITIVITY and self.ps7 > PS_SENSITIVITY:
-            self.found_wall = True
+            # self.found_wall = True
             self.stop()
             self.mountWall()
-            self.setSpeed(50)
+            self.last_direction = self.direction
+            self.state = RobotStates.FollowWall
+            # self.setSpeed(50)
             print(self)
+            return
 
-        if self.found_wall:
+        if self.state == RobotStates.FollowWall:
+            self.showRightSensors()
+            if self.ps2 < 200:
+                self.rightTurn()
+                return
+                # start = self.leftMotorSensor.getValue()
+                # while self.step():
+                #     if self.leftMotorSensor.getValue() - start > 1.65:
+                #         self.faceEast()
+                #         self.setSpeed(50)
+                #         start = self.leftMotorSensor.getValue()
+                #         while self.step():
+                #             if self.leftMotorSensor.getValue() - start > 4:
+                #                 self.showRightSensors()
+                #                 self.running = False
+                #                 return
+
+            # print(self.leftMotorSensor.getValue())
+            pass
             # self.showRightSensors()
-            if self.ps2 < 500 and self.ps1 < 200:
-                # self.setLeftWheelSpeed(40)
-                self.setRightWheelSpeed(1)
+            # if self.ps2 < 500 and self.ps1 < 200:
+            #     self.setLeftWheelSpeed(50)
+            #     self.setRightWheelSpeed(-10)
+            #     if self.last_direction is not self.direction:
+            #         self.faceEast()
+            #     return
+                # return
+                # print('Lost Wall')
+                # return
+            # self.showRightSensors()
+            # if self.ps2 < 500 and self.ps1 < 200:
+            #     # self.setLeftWheelSpeed(40)
+            #     self.setRightWheelSpeed(1)
+            #     return
+        self.setSpeed(100)
+
+    def rightTurn(self):
+        self.setSpeed(70)
+        start = self.leftMotorSensor.getValue()
+        while self.step():
+            if self.leftMotorSensor.getValue() - start > 1.7:
+                break
+        if self.direction == Direction.North:
+            self.faceEast()
+        elif self.direction == Direction.East:
+            self.faceSouth()
+        elif self.direction == Direction.South:
+            self.faceWest()
+        else:
+            self.faceNorth()
+        self.setSpeed(100)
+        while self.step():
+            if self.ps2 > 200:
                 return
 
-            self.setSpeed(50)
 
     def mountWall(self):
         dir = self.direction
@@ -411,7 +469,7 @@ class EPuck:
         str += "{!s:-^40}"
         return str.format(
             'Robot',
-            'Direction:', self.traveling_direction.name, self.bearing,
+            'Direction:', self.direction.name, self.bearing,
             'Timestep Count:', self.timestep_count,
             'Sensors:',
             'ps0', self.ps0,
