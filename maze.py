@@ -1,3 +1,4 @@
+# maze.py
 
 from controller import Robot, Motor, TouchSensor, DistanceSensor
 import math
@@ -51,7 +52,7 @@ def poleBearing(direction):
     elif direction == Direction.West:
         return 90.00
 
-class MyRobot:
+class EPuck:
 
     robot = None
     timestep = 64
@@ -59,14 +60,21 @@ class MyRobot:
     ps = []
     leftMotor = None
     rightMotor = None
+    leftMotorSensor = None
+    rightMotorSensor = None
     compass = None
     
+    running = True
+    wall_ending = False
     traveling_direction = None
     found_wall = False
     # found_wall = True
 
-    def __init__(self, robot, timestep):
+    def __init__(self):
+        robot = Robot()
         self.robot = robot
+
+        timestep = int(robot.getBasicTimeStep())
         self.timestep = timestep
 
         for i in psNames:
@@ -85,6 +93,15 @@ class MyRobot:
 
         self.leftMotor = leftMotor
         self.rightMotor = rightMotor
+
+        leftMotorSensor = robot.getDevice('left wheel sensor')
+        rightMotorSensor = robot.getDevice('left wheel sensor')
+
+        leftMotorSensor.enable(timestep)
+        rightMotorSensor.enable(timestep)
+
+        self.leftMotorSensor = leftMotorSensor
+        self.rightMotorSensor = rightMotorSensor
 
         # self.touch = self.robot.getDevice('touch sensor')
         # self.touch.enable(self.timestep)
@@ -340,20 +357,17 @@ class MyRobot:
         self.step()
         # print(bearing)
 
-class EPuck(MyRobot):
-
-    running = True
-    wall_ending = False
-
     def run(self):
-        self.setSpeed(50)
+        # self.setSpeed(50)
         while self.step() > 0 and self.running:
             self.travel()
     
     def travel(self):
-
         print(self.bearing)
-        self.showRightSensors()
+        # self.showRightSensors()
+
+
+        return
 
         if self.ps0 > PS_SENSITIVITY and self.ps7 > PS_SENSITIVITY:
             self.found_wall = True
@@ -416,102 +430,15 @@ class EPuck(MyRobot):
 
 clear()
 print("Starting")
-robot = Robot()
-timestep = int(robot.getBasicTimeStep())
-
-ePuck = EPuck(robot, timestep)
+ePuck = EPuck()
 ePuck.run()
 print(ePuck)
 # robot.faceNorth()
-# robot.faceNorth()
 # robot.faceEast()
 # robot.faceNorth()
 # robot.faceWest()
-# while robot.step() != -1:
-    # print(robot.bearing)
-# robot.faceSouth()
-# robot.faceEast()
-# robot.faceNorth()
-# print(robot.bearing)
-# robot.faceWest()
-# print(robot.bearing)
-# print(robot.direction)
-# print(robot.bearing)
-# robot.turn('left')
-# robot.turn('right')
-# robot.run()
-
-
-
-
-
-# get the motor devices
-# leftMotor = robot.getDevice('left wheel motor')
-# rightMotor = robot.getDevice('right wheel motor')
-
-# set the target position of the motors
-# we want the motors to continue to run forever
-# leftMotor.setPosition(float('inf'))
-# rightMotor.setPosition(float('inf'))
-
-# leftMotor.setVelocity(0.0)
-# rightMotor.setVelocity(0.0)
-
 
 # touch = robot.getDevice('touch sensor')
 # touch.enable(timestep)
 
-# compass = robot.getDevice('compass')
-# compass.enable(timestep)
-
-# leftE = robot.getDevice('left wheel sensor')
-# leftE.enable(timestep)
-
-# while robot.step(timestep) != -1:
-#     if(touch.getValue() > 0):
-#         break
-#     leftMotor.setVelocity(MAX_SPEED * 0.5)
-#     rightMotor.setVelocity(MAX_SPEED * 0.5)
-
-# set up the motor speeds at 10% of the MAX_SPEED.
-# leftMotor.setVelocity(0.1 * MAX_SPEED)
-# rightMotor.setVelocity(0.1 * MAX_SPEED)
-
-
-# def compassValues():
-#     answer = compass.getValues()
-#     if math.isnan(answer[0]):
-#         print("Compass isnan")
-#         return
-#     angle = math.atan2(answer[0], answer[1])
-#     # angle = (int(math.atan2(answer[0], answer[2]) * 100))
-#     print(angle)
-
-#     if angle < 0.77 and angle > -0.82:
-#         print("West")
-#     elif angle < -0.82 and angle > -2.4:
-#         print("North")
-#     elif angle < -2.41 and angle > 2.44:
-#         print("East")
-#     else:
-#         print("South")
-
-
-
-
-    # leftMotor.setVelocity(MAX_SPEED)
-    # leftMotor.setVelocity(1)
-    # rightMotor.setVelocity(MAX_SPEED)
-
-    # print(leftE.getValue())
-
-    # print("{:.2f} - {:.2f}".format(ps[0].getValue(), ps[7].getValue()))
-
-    # if ps[0].getValue() > 100 or ps[7].getValue() > 100:
-        # break
-    # print(leftE.getValue())
-    # compassValues()
-    # print(compass.getValues())
-
-    # if touch.getValue() > 0:
-    #     break
+# END
