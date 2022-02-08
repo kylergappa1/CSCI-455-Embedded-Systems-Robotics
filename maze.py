@@ -238,7 +238,6 @@ class EPuck:
                     break
         self.stop()
         self.step()
-        # print(bearing)
 
     def faceSouth(self):
         bearing = self.bearing
@@ -277,7 +276,6 @@ class EPuck:
                     break
         self.stop()
         self.step()
-        # print(bearing)
     
     def faceEast(self):
         bearing = self.bearing
@@ -316,7 +314,6 @@ class EPuck:
                     break
         self.stop()
         self.step()
-        # print(bearing)
 
     def faceWest(self):
         bearing = self.bearing
@@ -355,7 +352,6 @@ class EPuck:
                     break
         self.stop()
         self.step()
-        # print(bearing)
 
     def run(self):
         # self.setSpeed(50)
