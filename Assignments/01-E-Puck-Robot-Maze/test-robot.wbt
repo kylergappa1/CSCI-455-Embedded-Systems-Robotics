@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.5773502691896257 0.5773502691896257 0.5773502691896257 2.0944
-  position -2.116072304704375e-05 -2.1160782881739194e-05 2.5164471700271163
+  orientation -0.5649098559141811 0.5642042646522859 0.6021215844322408 2.0587458834217567
+  position -0.07430787418959905 -0.16221638922228407 2.599746804959328
 }
 TexturedBackground {
 }
@@ -13,6 +13,12 @@ RectangleArena {
 }
 Robot {
   children [
+    TouchSensor {
+      translation 0.038 0 0.01
+      boundingObject Box {
+        size 0.005 0.025 0.015
+      }
+    }
     Compass {
     }
     HingeJoint {
