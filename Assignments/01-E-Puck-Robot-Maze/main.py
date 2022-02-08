@@ -83,6 +83,15 @@ class EPuck:
         else:
             return Direction.North
 
+    def __str__(self):
+        str = "{!s:-^40}\n"
+        str += "{!s:<20}{!s} - ({:.2f})\n"
+        str += "{!s:-^40}"
+        return str.format(
+            'Robot',
+            'Direction:', self.direction.name, self.bearing,
+            '')
+
 print("Starting")
 robot = EPuck(Robot())
 
