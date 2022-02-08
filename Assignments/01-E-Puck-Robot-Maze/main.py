@@ -5,10 +5,19 @@ Assignment 01 - Webots E-Puck Robot Maze
 Spring 2022
 '''
 from controller import Robot
+from enum import Enum
 import math
 
 TIME_STEP = 64
 MAX_SPEED = 6.28
+
+class Direction(Enum):
+    North = 'North'
+    South = 'South'
+    East = 'East'
+    West = 'West'
+    Left = 'Left'
+    Right = 'Right'
 
 class EPuck:
     # properties
@@ -61,6 +70,18 @@ class EPuck:
         if bearing < 0.0:
             bearing = bearing + 360.0
         return bearing
+
+    @property
+    def direction(self):
+        bearing = self.bearing
+        if bearing > 45 and bearing <= 135:
+            return Direction.West
+        elif bearing > 135 and bearing <= 225:
+            return Direction.South
+        elif bearing > 225 and bearing <= 315:
+            return Direction.East
+        else:
+            return Direction.North
 
 print("Starting")
 robot = EPuck(Robot())
