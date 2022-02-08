@@ -3,11 +3,13 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.5773502691896257 0.5773502691896257 0.5773502691896257 2.0944
-  position 0 0 10
+  position -2.116072304704375e-05 -2.1160782881739194e-05 2.5164471700271163
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
+}
+E-puck {
 }
