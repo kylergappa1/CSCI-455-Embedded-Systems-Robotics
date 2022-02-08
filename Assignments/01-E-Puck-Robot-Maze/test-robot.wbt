@@ -13,6 +13,8 @@ RectangleArena {
 }
 Robot {
   children [
+    Compass {
+    }
     HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 1 0
