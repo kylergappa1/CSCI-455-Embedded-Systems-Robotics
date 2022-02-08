@@ -5,6 +5,7 @@ Assignment 01 - Webots E-Puck Robot Maze
 Spring 2022
 '''
 from controller import Robot
+import math
 
 TIME_STEP = 64
 MAX_SPEED = 6.28
@@ -51,6 +52,15 @@ class EPuck:
 
         self.touchSensor = self.robot.getDevice('touch sensor')
         self.touchSensor.enable(TIME_STEP)
+
+    @property
+    def bearing(self):
+        dir = self.compass.getValues()
+        rad = math.atan2(dir[0], dir[1])
+        bearing = (rad - 1.5708) / math.pi * 180.0
+        if bearing < 0.0:
+            bearing = bearing + 360.0
+        return bearing
 
 print("Starting")
 robot = EPuck(Robot())
