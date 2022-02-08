@@ -62,6 +62,11 @@ class EPuck:
         self.touchSensor = self.robot.getDevice('touch sensor')
         self.touchSensor.enable(TIME_STEP)
 
+    def step(self):
+        if self.robot.step(TIME_STEP) != -1:
+            return True
+        return False
+
     @property
     def bearing(self):
         dir = self.compass.getValues()
