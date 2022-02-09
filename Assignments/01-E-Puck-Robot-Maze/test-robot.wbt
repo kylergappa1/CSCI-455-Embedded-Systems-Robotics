@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.5649098559141811 0.5642042646522859 0.6021215844322408 2.0587458834217567
-  position -0.07430787418959905 -0.16221638922228407 2.599746804959328
+  orientation 0.0008519714072525076 0.9999992042724191 -0.000930375864795483 1.4795499444384035
+  position 0.2603561021712073 -0.09915446997858146 1.5924097918351081
 }
 TexturedBackground {
 }
@@ -12,6 +12,8 @@ TexturedBackgroundLight {
 RectangleArena {
 }
 Robot {
+  translation 0.45 -0.3 0
+  rotation 0 0 1 1.5708
   children [
     TouchSensor {
       translation 0.038 0 0.01
@@ -39,6 +41,7 @@ Robot {
       ]
       endPoint DEF EPUCK_LEFT_WHEEL Solid {
         translation 0 0.026 0.02
+        rotation 0 1 0 0
         children [
           DEF EPUCK_WHEEL Transform {
             rotation 1 0 0 -1.570796
@@ -190,6 +193,7 @@ Robot {
       ]
       endPoint DEF EPUCK_RIGHT_WHEEL Solid {
         translation 0 -0.026 0.02
+        rotation 0 1 0 0
         children [
           Transform {
             rotation 1 0 0 3.14159
@@ -1075,4 +1079,18 @@ Robot {
   cpuConsumption 1.11
   window "e-puck"
   remoteControl "e-puck_bluetooth"
+}
+Solid {
+  translation 0.41 -0.12 -0.03
+  scale 2 2 2
+  children [
+    Shape {
+      geometry Box {
+        size 0.1 0.1 0.1
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.1 0.1 0.1
+  }
 }
