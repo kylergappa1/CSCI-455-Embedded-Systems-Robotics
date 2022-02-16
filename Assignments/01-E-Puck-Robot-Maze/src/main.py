@@ -155,7 +155,7 @@ class EPuck:
         # l_speed = MAX_SPEED
         # r_speed = MAX_SPEED
 
-        print("front_left: {:.2f} - front_right: {:.2f} - right_corner: {:.2f} - right_side: {:.2f}".format(front_left, front_right, right_corner, right_side))
+        # print("front_left: {:.2f} - front_right: {:.2f} - right_corner: {:.2f} - right_side: {:.2f}".format(front_left, front_right, right_corner, right_side))
 
         # ------------------------------------------------------------
         # Find Wall
@@ -188,24 +188,27 @@ class EPuck:
         # ------------------------------------------------------------
         elif self.state == RobotState.FollowWall:
             # Facing Wall
-            # if front_left > 100 and front_right > 100:
-            #     self.setSpeed(50)
-            #     self.state = RobotState.FindWall
+            if front_left > 500 and front_right > 500:
+                self.setSpeed(50)
+                self.state = RobotState.FindWall
+                print("Find Wall")
+                return
             
             # Turn Corner
-            # if right_corner < 80 and right_side > 300:
-                # self.state = RobotState.TurnCorner
-                # self.setSpeed(0)
+            if right_corner < 80 and right_side > 300:
+                self.state = RobotState.TurnCorner
+                self.setSpeed(0)
+                print("Turn Corner")
 
 
             # Adjust left
-            if right_corner > 300: # and right_side > 200
-                print('adjust left')
+            elif right_corner > 150: # and right_side > 200
+                # print('adjust left')
                 self.setLeftWheelSpeed(90)
                 self.setRightWheelSpeed(100)
             # Adjust right
-            elif right_corner < 150: # and right_side > 200
-                print('adjust right')
+            elif right_corner < 100: # and right_side > 200
+                # print('adjust right')
                 self.setLeftWheelSpeed(100)
                 self.setRightWheelSpeed(90)
             # elif right_side < 80:
@@ -216,7 +219,12 @@ class EPuck:
         # Turn Corner
         # ------------------------------------------------------------
         elif self.state == RobotState.TurnCorner:
-
+            print("Turning a Corner")
+            if front_left > 500 and front_right > 500:
+                self.setSpeed(50)
+                self.state = RobotState.FindWall
+                print("Find Wall")
+                return
             if self.rightCornerPeak is None or right_side > self.rightCornerPeak:
                 self.rightCornerPeak = right_side
 
@@ -235,8 +243,15 @@ class EPuck:
         # Correct Turn
         # ------------------------------------------------------------
         elif self.state == RobotState.CorrectTurn:
+            if front_left > 500 and front_right > 500:
+                self.setSpeed(50)
+                self.state = RobotState.FindWall
+                print("Find Wall")
+                return
+
             self.setLeftWheelSpeed(30)
             self.setRightWheelSpeed(0)
+
             if right_corner > 140:
                 self.state = RobotState.FollowWall
                 self.setSpeed(50)
