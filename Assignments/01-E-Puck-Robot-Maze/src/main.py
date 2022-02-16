@@ -1,5 +1,6 @@
 '''
 River Kelly
+Kyler Gappa
 CSCI-455: Embedded Systems (Robotics)
 Assignment 01 - Webots E-Puck Robot Maze
 Spring 2022
@@ -8,6 +9,7 @@ from controller import Robot
 from enum import Enum
 import math
 
+
 class Direction(Enum):
     North = 'North'
     South = 'South'
@@ -15,6 +17,7 @@ class Direction(Enum):
     West = 'West'
     Left = 'Left'
     Right = 'Right'
+
 
 class RobotState(Enum):
     FindWall = 'Find Wall'
@@ -26,6 +29,7 @@ class RobotState(Enum):
 
 TIME_STEP = 64
 MAX_SPEED = 6.28
+
 
 class EPuck:
     # properties
@@ -41,7 +45,6 @@ class EPuck:
     GameOver = False
     # state = RobotState.FindWall
     state = RobotState.FollowWall
-
 
     rightCornerPeak = None
 
@@ -89,20 +92,27 @@ class EPuck:
     @property
     def bearing(self):
         dir = self.compass.getValues()
-        if math.isnan(dir[0]): return None
+        if math.isnan(dir[0]):
+            return None
         rad = math.atan2(dir[0], dir[1])
         bearing = (rad - 1.5708) / math.pi * 180.0
-        if bearing < 0.0: bearing = bearing + 360.0
+        if bearing < 0.0:
+            bearing = bearing + 360.0
         return bearing
 
     @property
     def direction(self):
         bearing = self.bearing
-        if bearing is None: return None
-        if bearing > 45 and bearing <= 135: return Direction.West
-        elif bearing > 135 and bearing <= 225: return Direction.South
-        elif bearing > 225 and bearing <= 315: return Direction.East
-        else: return Direction.North
+        if bearing is None:
+            return None
+        if 45 < bearing <= 135:
+            return Direction.West
+        elif 135 < bearing <= 225:
+            return Direction.South
+        elif 225 < bearing <= 315:
+            return Direction.East
+        else:
+            return Direction.North
 
     # setSpeed()
     # -------------------------------------------
@@ -152,7 +162,8 @@ class EPuck:
         # ------------------------------------------------------------
         if self.state == RobotState.FindWall:
             self.setSpeed(100)
-            if front_left < 200 and front_right < 200: return
+            if front_left < 200 and front_right < 200:
+                return
             self.state = RobotState.MountWall
             self.setSpeed(0)
             print('Mount Wall')
@@ -162,9 +173,12 @@ class EPuck:
         elif self.state == RobotState.MountWall:
             self.setLeftWheelSpeed(-35)
             self.setRightWheelSpeed(35)
-            if front_left > 80 or front_right > 80: return
-            if right_side < 200: return
-            if right_corner > 150: return
+            if front_left > 80 or front_right > 80:
+                return
+            if right_side < 200:
+                return
+            if right_corner > 150:
+                return
             # We are adjusted
             self.setSpeed(0)
             self.state = RobotState.FollowWall
@@ -207,21 +221,9 @@ class EPuck:
                 self.rightCornerPeak = right_side
 
             if self.rightCornerPeak > right_side and self.rightCornerPeak > 500 and right_side < 180:
-                # self.setLeftWheelSpeed(30)
-                # self.setRightWheelSpeed(0)
                 self.state = RobotState.CorrectTurn
                 print("Correct Turn")
                 return
-
-            # if right_side < 200 and right_corner < 80:
-            #     self.setLeftWheelSpeed(80)
-            #     self.setRightWheelSpeed(10)
-            #     return
-            # elif right_side < 200 and right_corner > 80 and right_corner < 150:
-            #     self.setLeftWheelSpeed(60)
-            #     self.setRightWheelSpeed(30)
-            #     return
-
 
             if right_side > 200 and right_corner < 80:
                 self.setLeftWheelSpeed(80)
@@ -238,8 +240,6 @@ class EPuck:
             if right_corner > 140:
                 self.state = RobotState.FollowWall
                 self.setSpeed(50)
-
-
 
 
 print("Starting")
