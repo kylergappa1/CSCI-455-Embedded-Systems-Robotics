@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation 0.23987398418825578 -0.3666158622021109 -0.8989178390105823 4.836214981734921
-  position -0.14713587188210217 -1.6446997779852628 0.6858941462370299
+  orientation 0.4575608459760704 -0.48274686467920197 -0.7467218604487639 4.3693621297768095
+  position 0.2447969917664599 -1.3507203675208637 2.9024906847026997
 }
 TexturedBackground {
 }
@@ -407,7 +407,7 @@ Solid {
   ]
   name "solid(18)"
   boundingObject Box {
-    size 0.24 0.24 0.08
+    size 0.24 0.12 0.08
   }
 }
 Solid {
@@ -428,7 +428,10 @@ Solid {
 }
 Robot {
   translation -0.06 -0.6 0
+  rotation 0 0 1 1.5708
   children [
+    Compass {
+    }
     HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 1 0
