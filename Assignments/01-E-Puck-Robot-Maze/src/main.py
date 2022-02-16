@@ -39,8 +39,8 @@ class EPuck:
     touchSensor = None
 
     GameOver = False
-    state = RobotState.FindWall
-    # state = RobotState.FollowWall
+    # state = RobotState.FindWall
+    state = RobotState.FollowWall
 
 
     rightCornerPeak = None
@@ -73,6 +73,8 @@ class EPuck:
         # compass
         self.compass = self.robot.getDevice('compass')
         self.compass.enable(TIME_STEP)
+
+        self.setSpeed(50)
 
         # self.touchSensor = self.robot.getDevice('touch sensor')
         # self.touchSensor.enable(TIME_STEP)
@@ -143,7 +145,7 @@ class EPuck:
         # l_speed = MAX_SPEED
         # r_speed = MAX_SPEED
 
-        print("ps7: {:.2f} - ps0: {:.2f} - ps1: {:.2f} - ps2: {:.2f}".format(front_left, front_right, right_corner, right_side))
+        print("front_left: {:.2f} - front_right: {:.2f} - right_corner: {:.2f} - right_side: {:.2f}".format(front_left, front_right, right_corner, right_side))
 
         # ------------------------------------------------------------
         # Find Wall
@@ -171,28 +173,29 @@ class EPuck:
         # Follow Wall
         # ------------------------------------------------------------
         elif self.state == RobotState.FollowWall:
-            print(self.bearing)
-
-            # TODO: right_side check
             # Facing Wall
-            if front_left > 100 and front_right > 100:
-                self.setSpeed(50)
-                self.state = RobotState.FindWall
+            # if front_left > 100 and front_right > 100:
+            #     self.setSpeed(50)
+            #     self.state = RobotState.FindWall
             
             # Turn Corner
-            elif right_corner < 80:
-                self.state = RobotState.TurnCorner
+            # if right_corner < 80 and right_side > 300:
+                # self.state = RobotState.TurnCorner
                 # self.setSpeed(0)
+
+
             # Adjust left
-            elif right_corner > 150: # and right_side > 200
+            if right_corner > 300: # and right_side > 200
+                print('adjust left')
                 self.setLeftWheelSpeed(90)
                 self.setRightWheelSpeed(100)
             # Adjust right
-            elif right_corner < 160: # and right_side > 200
+            elif right_corner < 150: # and right_side > 200
+                print('adjust right')
                 self.setLeftWheelSpeed(100)
                 self.setRightWheelSpeed(90)
-            elif right_side < 80:
-                self.setSpeed(0)
+            # elif right_side < 80:
+            #     self.setSpeed(0)
             else:
                 self.setSpeed(100)
         # ------------------------------------------------------------
@@ -224,28 +227,6 @@ class EPuck:
                 self.setLeftWheelSpeed(80)
                 self.setRightWheelSpeed(55)
                 return
-            # if right_side > 200 and right_corner > 150:
-            #     self.state = RobotState.FollowWall
-            #     print("Follow Wall")
-            #     return
-
-
-            # if right_side < 200 and right_corner < 80:
-            #     self.setLeftWheelSpeed(80)
-            #     self.setRightWheelSpeed(10)
-            # elif right_side > 500:
-            #     self.setLeftWheelSpeed(30)
-            #     self.setRightWheelSpeed(-30)
-            # elif right_side < 200 and right_corner > 80 and right_corner < 150:
-            #     self.setLeftWheelSpeed(80)
-            #     self.setRightWheelSpeed(30)
-            # elif right_corner > 150 and right_side > 200:
-                # self.state = RobotState.FollowWall
-                # self.setSpeed(50)
-                # print("Follow Wall")
-            # elif right_corner < 80 and right_side > 200:
-            #     self.setLeftWheelSpeed(80)
-            #     self.setRightWheelSpeed(55)
             elif right_side < 80:
                 self.setSpeed(0)
         # ------------------------------------------------------------
@@ -270,59 +251,3 @@ while robot.step() and not robot.GameOver:
 print("Found Trophy")
 
 # END
-
-
-
-
-
-
-                    
-            # elif right_corner < 200 and right_side > 300:
-            #     self.setLeftWheelSpeed(60)
-            #     self.setRightWheelSpeed(30)
-            # elif right_corner < 80 and right_side > 200:
-                    
-            # elif right_corner < 100 and right_side < 200 and right_side > 150:
-            #     self.setLeftWheelSpeed(100)
-            #     self.setRightWheelSpeed(70)
-            # elif right_corner > 170 and right_side > 200:
-            #     self.setLeftWheelSpeed(100)
-            #     self.setRightWheelSpeed(90)
-            # elif right_corner < 140 and right_side > 200:
-            #     self.setLeftWheelSpeed(90)
-            #     self.setRightWheelSpeed(100)
-            
-            # elif right_side < 80:
-            #     # self.setLeftWheelSpeed(35)
-            #     # self.setRightWheelSpeed(-35)
-            #     self.setSpeed(0)
-            # else:
-            #     self.setSpeed(100)
-        
-
-        # self.leftMotor.setVelocity(l_speed)
-        # self.rightMotor.setVelocity(r_speed)
-        # if front_left < 80 and front_right < 80 and right_corner < 80 and right_side < 80:
-        #     self.setSpeed(100)
-        # elif front_left > 150 and front_right > 150:
-        #     self.setLeftWheelSpeed(-35)
-        #     self.setRightWheelSpeed(35)
-        # elif front_left > 80 and front_right > 80:
-        #     self.setSpeed(25)
-                # self.state = RobotState.FollowWall
-            # print("{:.2f} - {:.2f} - {:.2f}".format(front_right, right_corner, right_side))
-        # elif front_left > 80 or front_right > 80:
-                # self.leftMotor.setVelocity(2.0)
-                # self.rightMotor.setVelocity(2.0)
-            # self.setSpeed(50)
-            # print("{:.2f} - {:.2f}".format(front_left, front_right))
-        # elif self.state == RobotState.FollowWall:
-            # print("{:.2f} - {:.2f} - {:.2f}".format(front_right, right_corner, right_side))
-        # elif right_side < 80 and right_corner > 150: # left
-        #     self.setLeftWheelSpeed(-35)
-        #     self.setRightWheelSpeed(35)
-        # elif right_side < 150 and right_corner < 80:
-        #     self.setLeftWheelSpeed(35)
-        #     self.setRightWheelSpeed(-35)
-        # else:
-        #     self.setSpeed(100)
