@@ -199,6 +199,7 @@ class EPuck:
                 self.state = RobotState.TurnCorner
                 self.setSpeed(0)
                 print("Turn Corner")
+                return
 
 
             # Adjust left
@@ -219,7 +220,7 @@ class EPuck:
         # Turn Corner
         # ------------------------------------------------------------
         elif self.state == RobotState.TurnCorner:
-            print("Turning a Corner")
+            # print("Turning a Corner")
             if front_left > 500 and front_right > 500:
                 self.setSpeed(50)
                 self.state = RobotState.FindWall
